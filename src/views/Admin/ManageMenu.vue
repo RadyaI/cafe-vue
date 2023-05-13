@@ -59,8 +59,10 @@
                         <h5 class="section-title ff-secondary text-center text-primary fw-normal">Food Menu</h5>
                         <h1 class="mb-5">Most Popular Items</h1>
                     </div>
+
                     <button class="btn btn-outline-dark mb-4" data-bs-toggle="modal" data-bs-target="#addmenu"><i
                             class="bi bi-cart-plus-fill"></i></button>
+
                     <input type="text" class="form-control mb-4" v-model="carimenu" placeholder="Search menu...">
                     <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s">
 
@@ -75,7 +77,9 @@
                                                 alt="Kopi mas" style="width: 80px;">
                                             <div class="w-100 d-flex flex-column text-start ps-4">
                                                 <h5 class="d-flex justify-content-between border-bottom pb-2">
-                                                    <span>{{ menu.nama }} <button class="btn btn-outline-primary"><i
+                                                    <span>{{ menu.nama }} <button class="btn btn-outline-primary"
+                                                            data-bs-toggle="modal" @click="getdetail(menu)"
+                                                            data-bs-target="#editmenu"><i
                                                                 class="bi bi-gear-fill"></i></button></span>
 
                                                     <span class="text-primary">Rp.{{ menu.harga }}</span>
@@ -203,6 +207,84 @@
             </div>
             <!-- END ADD MENU -->
 
+            <!-- EDIT MENU -->
+            <div class="modal fade" id="editmenu" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">EDIT MENU</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form @submit.prevent="editmenu">
+                            <div class="modal-body">
+                                <div class="card" style="width: 18rem;">
+                                    <img :src="'http://localhost/UKL-Cafe/cafelaravel/public/images/' + image"
+                                        class="card-img-top" alt="...">
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="nama">Nama Menu:</label>
+                                        <input type="text" class="form-control" v-model="detailmenu.nama" required>
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="harga">Harga:</label>
+                                        <input type="number" class="form-control" v-model="detailmenu.harga" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="jenis">Type:</label>
+                                        <select class="form-control" v-model="detailmenu.jenis" required id="jenis">
+                                            <option value="makanan">Makanan</option>
+                                            <option value="minuman">Minuman</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- <div class="col">
+                                        <label for="foto">Foto:</label>
+                                        <input type="file" @change="updatefoto($event)" class="form-control" required
+                                            id="foto">
+                                    </div> -->
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#editfoto">Update Photo</button>
+                                <button type="submit" class="btn btn-primary">save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- END EDIT MENU -->
+
+            <!-- EDIT FOTO -->
+            <div class="modal fade" id="editfoto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">UPDATE PHOTO</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form @submit.prevent="savefoto">
+                            <div class="modal-body">
+                                <input type="file" class="form-control" @change="updatefoto($event)" id="foto" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- END EDIT FOTO -->
 
             <!-- Back to Top -->
             <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
@@ -218,18 +300,22 @@ export default {
         return {
             menu: {},
             datamenu: {},
+            detailmenu: {},
+            foto: '',
+            image: '',
             carimenu: ''
         }
     },
     mounted() {
         this.getmenu()
+        this.getdetail()
     },
     computed: {
         filter_menu() {
             let filter_data = this.datamenu
             if (this.carimenu) {
                 filter_data = filter_data.filter(menu => menu.nama.toString().toLowerCase().includes(this.carimenu.toLowerCase()))
-            } 
+            }
             return filter_data
         }
     },
@@ -239,6 +325,19 @@ export default {
                 .then(
                     ({ data }) => {
                         this.datamenu = data
+                    }
+                )
+        },
+        getdetail(menu) {
+            axios.get('http://localhost:8000/api/getmenu/' + menu.id_menu)
+                .then(
+                    (response) => {
+                        console.log(response)
+                        this.detailmenu.id_menu = response.data[0].id_menu
+                        this.detailmenu.nama = response.data[0].nama
+                        this.image = response.data[0].foto
+                        this.detailmenu.jenis = response.data[0].jenis
+                        this.detailmenu.harga = response.data[0].harga
                     }
                 )
         },
@@ -271,6 +370,78 @@ export default {
                         swal({
                             icon: 'error',
                             title: 'Failed Upload Menu',
+                            button: true
+                        })
+                    }
+                )
+        },
+        editmenu() {
+            // let form = new FormData
+            // // form.append("foto", this.detailmenu.foto)
+            // form.append("nama", this.detailmenu.nama)
+            // form.append("jenis", this.detailmenu.jenis)
+            // form.append("harga", this.detailmenu.harga)
+
+            swal({
+                title: 'Are you sure?',
+                icon: 'warning',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (edit) => {
+                    if (edit) {
+                        axios.put('http://localhost:8000/api/updatemenu/' + this.detailmenu.id_menu, this.detailmenu)
+                            .then(
+                                (response) => {
+                                    console.log(response)
+                                    swal({
+                                        icon: 'success',
+                                        title: 'Success Update Menu'
+                                    })
+                                    setTimeout(() => {
+                                        location.reload()
+                                    }, 1200);
+                                }
+                            )
+                            .catch(
+                                (error) => {
+                                    console.log(error)
+                                    swal({
+                                        icon: 'error',
+                                        title: 'Failed Update Menu'
+                                    })
+                                }
+                            )
+                    }
+                }
+            )
+        },
+        updatefoto(e) {
+            this.foto = e.target.files[0]
+        },
+        savefoto() {
+            let form = new FormData
+            form.append("foto", this.foto)
+
+            axios.put('http://localhost:8000/api/updatephoto/' + this.detailmenu.id_menu, form)
+                .then(
+                    (response) => {
+                        console.log(response)
+                        swal({
+                            icon: 'success',
+                            title: 'Success'
+                        })
+                        setTimeout(() => {
+                            location.reload()
+                        }, 1200);
+                    }
+                )
+                .catch(
+                    (err) => {
+                        console.log(err)
+                        swal({
+                            icon: 'error',
+                            title: 'Failed Update Photo',
                             button: true
                         })
                     }
