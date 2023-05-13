@@ -73,11 +73,15 @@
                                 </td>
                                 <td>{{ user.role }}</td>
                                 <td>
-                                  <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-gear-fill"></i></button>
-                                    <button type="button" class="btn btn-outline-info"><i class="bi bi-eye-fill"></i></button>
-                                    <button type="button" class="btn btn-outline-danger"><i class="bi bi-trash-fill"></i></button>
-                                  </div>
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                            data-bs-target="#edituser" @click="getdetail(user)"><i
+                                                class="bi bi-gear-fill"></i></button>
+                                        <button type="button" class="btn btn-outline-info"><i
+                                                class="bi bi-eye-fill"></i></button>
+                                        <button type="button" class="btn btn-outline-danger" @click="deleteuser(user)"><i
+                                                class="bi bi-trash-fill"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -159,6 +163,8 @@
             <!-- Back to Top -->
             <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
         </div>
+
+        <!-- MODAL ADD USER -->
         <div class="modal fade" id="addUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -203,6 +209,54 @@
                 </div>
             </div>
         </div>
+        <!-- END MODAL ADD USER -->
+
+
+        <!-- MODAL EDIT USER -->
+        <div class="modal fade" id="edituser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit User</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form @submit.prevent="edituser">
+                        <div class="modal-body">
+
+                            <label for="nama">Nama:</label>
+                            <input type="text" class="form-control" v-model="edit.nama" required autocomplete="off">
+
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" v-model="edit.email" required autocomplete="off">
+
+                            <label for="gender">Gender:</label>
+                            <select class="form-control" v-model="edit.gender" required id="gender">
+                                <option value="L" style="background-color: lightblue; color:black;">Laki-laki</option>
+                                <option value="P" style="background-color: pink; color:black;">Perempuan</option>
+                                <option value="L">Walmart Bag</option>
+                            </select>
+
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" v-model="edit.password" required>
+
+                            <label for="Role">Role:</label>
+                            <select class="form-control" v-model="edit.role" required id="Role">
+                                <option value="admin">Admin</option>
+                                <option value="kasir">Kasir</option>
+                                <option value="manager">Manager</option>
+                            </select>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- END MODAL EDIT USER -->
     </div>
 </template>
 <script>
@@ -213,11 +267,15 @@ export default {
     data() {
         return {
             user: {},
-            datauser: {}
+            datauser: {},
+            detail: {},
+            edit: {},
+
         }
     },
     mounted() {
         this.getuser()
+        // this.getdetailuser()
     },
     methods: {
         tes() {
@@ -229,6 +287,22 @@ export default {
                     ({ data }) => {
                         this.datauser = data
                         console.log(data)
+                    }
+                )
+        },
+        getdetail(user) {
+            axios.get('http://localhost:8000/api/getuser/' + user.id_user)
+                .then(
+                    (response) => {
+                        // console.log(data)
+                        this.edit = response
+                        this.edit.id_user = response.data[0].id_user
+                        this.edit.nama = response.data[0].nama
+                        this.edit.email = response.data[0].email
+                        this.edit.password = response.data[0].password
+                        this.edit.gender = response.data[0].gender
+                        this.edit.role = response.data[0].role
+                        // this.nama = response.data[0].nama
                     }
                 )
         },
@@ -265,6 +339,83 @@ export default {
                                     }
                                 }
                             )
+                    }
+                }
+            )
+        },
+        edituser() {
+            swal({
+                icon: 'warning',
+                title: 'Are you sure?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (save) => {
+                    if (save) {
+                        axios.put('http://localhost:8000/api/updateuser/' + this.edit.id_user, this.edit)
+                            .then(
+                                (response) => {
+                                    console.log(response)
+                                    swal({
+                                        icon: 'success',
+                                        title: 'success',
+                                    })
+                                    setTimeout(() => {
+                                        location.reload()
+                                    }, 1200);
+                                }
+                            )
+                            .catch(
+                                (error) => {
+                                    console.log(error)
+                                    swal({
+                                        icon: 'error',
+                                        title: 'Failed Update User',
+                                        buttons: true
+                                    })
+                                }
+                            )
+                    }
+                }
+            )
+        },
+        deleteuser(user) {
+            swal({
+                icon: 'warning',
+                title: 'Are you sure?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (hapus) => {
+                    if (hapus) {
+                        axios.delete('http://localhost:8000/api/deleteuser/' + user.id_user)
+                            .then(
+                                (response) => {
+                                    console.log(response)
+                                    swal({
+                                        title: 'Success',
+                                        icon: 'success',
+                                    })
+                                    setTimeout(() => {
+                                        location.reload()
+                                    }, 1200);
+                                }
+                            )
+                            .catch(
+                                (err) => {
+                                    console.log(err)
+                                    swal({
+                                        icon: 'error',
+                                        title: 'Failed delete user '
+                                    })
+                                }
+                            )
+                    } else {
+                        swal({
+                            icon: 'success',
+                            title: 'Your data is safe',
+                            button: true
+                        })
                     }
                 }
             )
