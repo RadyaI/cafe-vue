@@ -6,6 +6,11 @@ import ManageUser from '../views/Admin/ManageUser.vue'
 import ManageMenu from '../views/Admin/ManageMenu.vue'
 import ManageMeja from '../views/Admin/ManageMeja.vue'
 
+import KasirHome from '../views/Kasir/KasirHome.vue'
+import TransaksiPage from '../views/Kasir/TransaksiPage.vue'
+import AddMenu from '../views/Kasir/AddMenu.vue'
+import OnGoing from '../views/Kasir/OnGoing.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -24,6 +29,22 @@ const routes = [
   {
     path: '/managetable',
     component: ManageMeja
+  },
+  {
+    path: '/kasir',
+    component: KasirHome
+  },
+  {
+    path: '/transaksi',
+    component: TransaksiPage
+  },
+  {
+    path: '/addmenu',
+    component: AddMenu
+  },
+  {
+    path: '/ongoing',
+    component: OnGoing
   }
 ]
 
