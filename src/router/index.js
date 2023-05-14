@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import AdminHome from '../views/Admin/AdminHome.vue'
 import ManageUser from '../views/Admin/ManageUser.vue'
 import ManageMenu from '../views/Admin/ManageMenu.vue'
+import ManageMeja from '../views/Admin/ManageMeja.vue'
 
 Vue.use(VueRouter)
 
@@ -19,6 +20,10 @@ const routes = [
   {
     path: '/managemenu',
     component: ManageMenu
+  },
+  {
+    path: '/managetable',
+    component: ManageMeja
   }
 ]
 

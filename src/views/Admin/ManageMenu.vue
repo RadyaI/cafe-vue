@@ -254,6 +254,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-danger" @click="removemenu()">Remove</button>
                                 <button type="button" class="btn btn-info" data-bs-toggle="modal"
                                     data-bs-target="#editfoto">Update Photo</button>
                                 <button type="submit" class="btn btn-primary">save</button>
@@ -423,7 +424,7 @@ export default {
             let form = new FormData
             form.append("foto", this.foto)
 
-            axios.put('http://localhost:8000/api/updatephoto/' + this.detailmenu.id_menu, form)
+            axios.post('http://localhost:8000/api/updatephoto/' + this.detailmenu.id_menu, form)
                 .then(
                     (response) => {
                         console.log(response)
@@ -446,6 +447,48 @@ export default {
                         })
                     }
                 )
+        },
+        removemenu() {
+            swal({
+                icon: 'warning',
+                title: 'Are you sure?',
+                dangerMode: true,
+                buttons: true,
+            }).then(
+                (deletemenu) => {
+                    if (deletemenu) {
+                        axios.delete('http://localhost:8000/api/deletemenu/' + this.detailmenu.id_menu)
+                            .then(
+                                (response) => {
+                                    console.log(response)
+                                    swal({
+                                        icon: 'success',
+                                        title: 'Success remove menu'
+                                    })
+                                    setTimeout(() => {
+                                        location.reload()
+                                    }, 1200);
+                                }
+                            )
+                            .catch(
+                                (error) => {
+                                    console.log(error)
+                                    swal({
+                                        title: 'Failed remove menu',
+                                        icon: 'error',
+                                        button: true
+                                    })
+                                }
+                            )
+                    } else {
+                        swal({
+                            icon: 'success',
+                            title: 'Your menu is safe',
+                            button: true
+                        })
+                    }
+                }
+            )
         }
     }
 }
