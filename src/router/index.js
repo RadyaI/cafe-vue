@@ -10,6 +10,8 @@ import KasirHome from '../views/Kasir/KasirHome.vue'
 import TransaksiPage from '../views/Kasir/TransaksiPage.vue'
 import AddMenu from '../views/Kasir/AddMenu.vue'
 import OnGoing from '../views/Kasir/OnGoing.vue'
+import HistoryView from '../views/Kasir/HistoryView.vue'
+
 
 Vue.use(VueRouter)
 
@@ -45,6 +47,10 @@ const routes = [
   {
     path: '/ongoing',
     component: OnGoing
+  },
+  {
+    path: '/history',
+    component: HistoryView
   }
 ]
 
