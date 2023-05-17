@@ -67,6 +67,7 @@
                                 <th>Menu</th>
                                 <th>Jumlah</th>
                                 <th>Total Harga</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,6 +76,7 @@
                                 <td>{{ menu.nama }}</td>
                                 <td>{{ menu.total_pesanan }}</td>
                                 <td>{{ menu.total_harga }}</td>
+                                <td><button class="btn btn-outline-danger" @click="hapus(menu)">Hapus</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -291,6 +293,9 @@ export default {
                     }
                 }
             )
+        },
+        hapus(menu){
+            axios.delete('http://localhost:8000/api/deletetransaksi/' + menu.id_transaksi)
         }
     }
 }

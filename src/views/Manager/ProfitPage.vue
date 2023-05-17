@@ -66,14 +66,20 @@
                             Penghasilan
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title" v-if="this.cari_bulan">Pendapatan bulan {{ cari_bulan }} Adalah Rp.{{ profitbulan }}</h5>
-                            <p class="card-text" v-if="this.cari_tgl">Pendapatan Tanggal {{ cari_tgl }} Adalah Rp.{{ profithari }}</p>
+                            <h5 class="card-title" v-if="this.cari_bulan">Pendapatan bulan {{ cari_bulan }} Adalah Rp.{{
+                                profitbulan }}</h5>
+                            <p class="card-text" v-if="this.cari_tgl">Pendapatan Tanggal {{ cari_tgl }} Adalah Rp.{{
+                                profithari }}</p>
                         </div>
                     </div>
 
                 </div>
             </div>
             <!-- Service End -->
+
+            <div style="width: 300px; height: 300px; margin: 0px 40% 0px;" class="mt-4">
+                <canvas id="piechart" width="300" height="300"></canvas>
+            </div>
 
 
             <!-- Footer Start -->
@@ -192,7 +198,7 @@
 <script>
 import axios from 'axios';
 // import swal from 'sweetalert'
-
+import Chart from 'chart.js/auto'
 // import axios from 'axios'
 // import { filter } from 'vue/types/umd';
 // import { filter } from 'vue/types/umd'
@@ -204,10 +210,47 @@ export default {
             cari_tgl: '',
             profitbulan: '',
             profithari: '',
+            datamenu: {}
         }
     },
     mounted() {
         this.getdate()
+        axios.get('http://localhost:8000/api/getmenu')
+            .then(
+                (response) => {
+                    console.log(response)
+                    const data = response.data.map(item => item.jumlah_pesan)
+                    const nama = response.data.map(item => item.nama)
+
+                    let colors = []
+                    for (let i = 0; i < data.length; i++) {
+                        let color = '#' + Math.floor(Math.random() * 16777215).toString(16)
+                        colors.push(color)
+                    }
+
+                    const chartData = {
+                        labels: nama,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: colors
+                        }]
+                    }
+
+
+                    new Chart(document.getElementById('piechart'), {
+                        type: 'bar',
+                        labels: 'Data Menu',
+                        data: chartData,
+                        options: {
+                            responsive: true
+                        }
+                    })
+                })
+            .catch(
+                err => {
+                    console.log(err)
+                }
+            )
     },
     computed: {
     },
