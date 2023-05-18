@@ -20,7 +20,7 @@
                             <a href="/alltransaction" class="nav-item nav-link">All Transaction</a>
                             <a href="/filtertransaction" class="nav-item nav-link">Filter Transaction</a>
                             <a href="/profit" class="nav-item nav-link active">Profit</a>
-                            <a href="#" class="nav-item nav-link">LogOut</a>
+                            <a href="#" @click="logout" class="nav-item nav-link">LogOut</a>
                         </div>
                         <a href="" class="btn btn-primary py-2 px-4">Manager</a>
                     </div>
@@ -197,7 +197,7 @@
 
 <script>
 import axios from 'axios';
-// import swal from 'sweetalert'
+import swal from 'sweetalert'
 import Chart from 'chart.js/auto'
 // import axios from 'axios'
 // import { filter } from 'vue/types/umd';
@@ -238,7 +238,7 @@ export default {
 
 
                     new Chart(document.getElementById('piechart'), {
-                        type: 'bar',
+                        type: 'pie',
                         labels: 'Data Menu',
                         data: chartData,
                         options: {
@@ -283,6 +283,28 @@ export default {
             //         button: true
             //     })
             // }
+        },
+        logout() {
+            swal({
+                icon: 'warning',
+                title: 'Ingin Log Out?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (response) => {
+                    if (response) {
+                        localStorage.removeItem('role')
+                        localStorage.removeItem('token')
+                        swal({
+                            icon: 'success',
+                            button: false
+                        })
+                        setTimeout(() => {
+                            location.href = '/'
+                        }, 1200);
+                    }
+                }
+            )
         }
     }
 }
