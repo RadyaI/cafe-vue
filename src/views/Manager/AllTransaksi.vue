@@ -20,7 +20,7 @@
                             <a href="/alltransaction" class="nav-item nav-link active">All Transaction</a>
                             <a href="/filtertransaction" class="nav-item nav-link">Filter Transaction</a>
                             <a href="/profit" class="nav-item nav-link">Profit</a>
-                            <a href="#" class="nav-item nav-link">LogOut</a>
+                            <a href="#" @click="logout" class="nav-item nav-link">LogOut</a>
                         </div>
                         <a href="" class="btn btn-primary py-2 px-4">Manager</a>
                     </div>
@@ -185,6 +185,7 @@
 
 <script>
 import axios from 'axios'
+import swal from 'sweetalert'
 // import { filter } from 'vue/types/umd'
 
 export default {
@@ -219,18 +220,18 @@ export default {
                     }
                 )
         },
-        getfunction(history){
+        getfunction(history) {
             this.gettotal(history)
             this.getdetail(history)
         },
-        gettotal(history){
+        gettotal(history) {
             axios.get('http://localhost:8000/api/gettotal/' + history.id_pelayanan)
-            .then(
-                ({data}) => {
-                    console.log(data)
-                    this.total = data
-                }
-            )
+                .then(
+                    ({ data }) => {
+                        console.log(data)
+                        this.total = data
+                    }
+                )
         },
         getdetail(history) {
             axios.get('http://localhost:8000/api/gethistory/' + history.id_pelayanan)
@@ -240,6 +241,28 @@ export default {
                         this.detail = data
                     }
                 )
+        },
+        logout() {
+            swal({
+                icon: 'warning',
+                title: 'Ingin Log Out?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (response) => {
+                    if (response) {
+                        localStorage.removeItem('role')
+                        localStorage.removeItem('token')
+                        swal({
+                            icon: 'success',
+                            button: false
+                        })
+                        setTimeout(() => {
+                            location.href = '/'
+                        }, 1200);
+                    }
+                }
+            )
         }
     }
 }

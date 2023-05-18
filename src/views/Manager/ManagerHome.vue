@@ -20,7 +20,7 @@
                             <a href="/alltransaction" class="nav-item nav-link">All Transaction</a>
                             <a href="/filtertransaction" class="nav-item nav-link">Filter Transaction</a>
                             <a href="/profit" class="nav-item nav-link">Profit</a>
-                            <a href="#" class="nav-item nav-link">LogOut</a>
+                            <a href="#" @click="logout" class="nav-item nav-link">LogOut</a>
                         </div>
                         <a href="" class="btn btn-primary py-2 px-4">Manager</a>
                     </div>
@@ -844,3 +844,34 @@
         </div>
     </div>
 </template>
+
+<script>
+import swal from 'sweetalert'
+
+export default {
+    methods: {
+        logout() {
+            swal({
+                icon: 'warning',
+                title: 'Ingin Log Out?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (response) => {
+                    if (response) {
+                        localStorage.removeItem('role')
+                        localStorage.removeItem('token')
+                        swal({
+                            icon: 'success',
+                            button: false
+                        })
+                        setTimeout(() => {
+                            location.href = '/'
+                        }, 1200);
+                    }
+                }
+            )
+        }
+    }
+}
+</script>

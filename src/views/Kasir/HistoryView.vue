@@ -28,7 +28,7 @@
                             <a href="/ongoing" class="nav-item nav-link">On Going</a>
                             <a href="/history" class="nav-item nav-link active">History</a>
                             <!-- <a href="/menu" class="nav-item nav-link">Menu</a> -->
-                            <a href="#" class="nav-item nav-link">LogOut</a>
+                            <a href="#" @click="logout" class="nav-item nav-link">LogOut</a>
                         </div>
                         <a href="" class="btn btn-primary py-2 px-4">Cashier</a>
                     </div>
@@ -153,15 +153,15 @@
                             <!-- Nama pelanggan: <b>{{ detail.nama_pelanggan }}</b> -->
                             <table class="table table-hover table-striped">
                                 <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama</th>
-                                    <th>Jumlah</th>
-                                    <th>Harga</th>
-                                </tr>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama</th>
+                                        <th>Jumlah</th>
+                                        <th>Harga</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(history , nomor) in detail" :key="history.id_history">
+                                    <tr v-for="(history, nomor) in detail" :key="history.id_history">
                                         <td>{{ nomor + 1 }}</td>
                                         <td>{{ history.nama }}</td>
                                         <td>{{ history.total_pesanan }}</td>
@@ -170,7 +170,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary">Save changes</button>
@@ -187,6 +187,7 @@
 </template>
 <script>
 import axios from 'axios'
+import swal from 'sweetalert'
 
 export default {
     data() {
@@ -217,6 +218,27 @@ export default {
                         this.detail = data
                     }
                 )
+        },
+        logout() {
+            swal({
+                icon: 'warning',
+                title: 'Ingin LogOut?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (response) => {
+                    if (response) {
+                        localStorage.removeItem('role')
+                        localStorage.removeItem('token')
+                        swal({
+                            icon: 'success'
+                        })
+                        setTimeout(() => {
+                            location.href = '/'
+                        }, 1200);
+                    }
+                }
+            )
         }
     }
 }

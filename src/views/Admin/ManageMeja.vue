@@ -28,7 +28,7 @@
                             <a href="/managetable" class="nav-item nav-link">Table</a>
                             <a href="/managemenu" class="nav-item nav-link">Menu</a>
                             <a href="#" class="nav-item nav-link">About</a>
-                            <a href="#" class="nav-item nav-link">Logout</a>
+                            <a href="#" @click="logout" class="nav-item nav-link">Logout</a>
 
                             <!-- <a href="contact.html" class="nav-item nav-link">Report</a> -->
                         </div>
@@ -335,6 +335,28 @@ export default {
                                     })
                                 }
                             )
+                    }
+                }
+            )
+        },
+        logout() {
+            swal({
+                icon: 'warning',
+                title: 'Ingin Log Out?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (response) => {
+                    if (response) {
+                        localStorage.removeItem('role')
+                        localStorage.removeItem('token')
+                        swal({
+                            icon: 'success',
+                            button: false
+                        })
+                        setTimeout(() => {
+                            location.href = '/'
+                        }, 1200);
                     }
                 }
             )

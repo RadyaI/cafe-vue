@@ -20,7 +20,7 @@
                             <a href="/alltransaction" class="nav-item nav-link">All Transaction</a>
                             <a href="/filtertransaction" class="nav-item nav-link active">Filter Transaction</a>
                             <a href="/profit" class="nav-item nav-link">Profit</a>
-                            <a href="#" class="nav-item nav-link">LogOut</a>
+                            <a href="#" @click="logout" class="nav-item nav-link">LogOut</a>
                         </div>
                         <a href="" class="btn btn-primary py-2 px-4">Manager</a>
                     </div>
@@ -45,6 +45,7 @@
             <!-- Service Start -->
             <div class="container-xxl py-5">
                 <div class="container">
+                    {{ role }}
                     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                         <h5 class="section-title ff-secondary text-center text-primary fw-normal">Transaction History</h5>
                     </div>
@@ -193,7 +194,7 @@
 
 <script>
 import axios from 'axios';
-
+import swal from 'sweetalert'
 // import axios from 'axios'
 // import { filter } from 'vue/types/umd';
 // import { filter } from 'vue/types/umd'
@@ -205,11 +206,13 @@ export default {
             tgl_transaksi: '',
             datatransaksi: {},
             detail: {},
-            total: ''
+            total: '',
+            role: ''
         }
     },
     mounted() {
         this.gethistory()
+        this.role = localStorage.getItem('role')
     },
     computed: {
         filterdata() {
@@ -228,15 +231,6 @@ export default {
         }
     },
     methods: {
-        gethistory() {
-            axios.get('http://localhost:8000/api/gethistory')
-                .then(
-                    ({ data }) => {
-                        console.log(data)
-                        this.datatransaksi = data
-                    }
-                )
-        },
         getfunction(history) {
             this.gettotal(history)
             this.getdetail(history)
@@ -258,6 +252,37 @@ export default {
                         this.detail = data
                     }
                 )
+        },
+        gethistory() {
+            axios.get('http://localhost:8000/api/gethistory')
+                .then(
+                    ({ data }) => {
+                        console.log(data)
+                        this.datatransaksi = data
+                    }
+                )
+        },
+        logout() {
+            swal({
+                icon: 'warning',
+                title: 'Ingin Log Out?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (response) => {
+                    if (response) {
+                        localStorage.removeItem('role')
+                        localStorage.removeItem('token')
+                        swal({
+                            icon: 'success',
+                            button: false
+                        })
+                        setTimeout(() => {
+                            location.href = '/'
+                        }, 1200);
+                    }
+                }
+            )
         }
     }
 }

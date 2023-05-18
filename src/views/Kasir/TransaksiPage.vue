@@ -28,7 +28,7 @@
                             <a href="/ongoing" class="nav-item nav-link">On Going</a>
                             <a href="/history" class="nav-item nav-link">History</a>
                             <!-- <a href="/menu" class="nav-item nav-link">Menu</a> -->
-                            <a href="#" class="nav-item nav-link">LogOut</a>
+                            <a href="#" @click="logout" class="nav-item nav-link">LogOut</a>
                         </div>
                         <a href="" class="btn btn-primary py-2 px-4">Cashier</a>
                     </div>
@@ -294,8 +294,29 @@ export default {
                 }
             )
         },
-        hapus(menu){
+        hapus(menu) {
             axios.delete('http://localhost:8000/api/deletetransaksi/' + menu.id_transaksi)
+        },
+        logout() {
+            swal({
+                icon: 'warning',
+                title: 'Ingin Log Out?',
+                dangerMode: true,
+                buttons: true
+            }).then(
+                (response) => {
+                    if (response) {
+                        localStorage.removeItem('role')
+                        localStorage.removeItem('token')
+                        swal({
+                            icon: 'success'
+                        })
+                        setTimeout(() => {
+                            location.href = '/'
+                        }, 1200);
+                    }
+                }
+            )
         }
     }
 }
