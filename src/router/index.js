@@ -19,6 +19,8 @@ import FilterTransaksi from '../views/Manager/FilterTransaksi.vue'
 import ProfitPage from '../views/Manager/ProfitPage.vue'
 
 import LoginPage from '../views/LoginPage.vue'
+import NotFound from '../views/NotFound.vue'
+import MauKemana from '../views/MauKemana.vue'
 
 Vue.use(VueRouter)
 
@@ -138,6 +140,14 @@ const routes = [
       requiresAuth: true,
       allowedRoles: ['manager']
     }
+  },
+  {
+    path: '*',
+    component: NotFound
+  },
+  {
+    path: '/forbidden',
+    component: MauKemana
   }
 ]
 
