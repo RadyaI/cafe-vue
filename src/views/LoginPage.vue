@@ -45,13 +45,13 @@ export default {
                 .then(
                     (response) => {
                         localStorage.setItem('token', response.data.token)
-                        localStorage.setItem('role', response.data.role.role)
+                        localStorage.setItem('role', response.data.role)
 
-                        if (response.data.role.role === "admin") {
+                        if (response.data.role === "admin") {
                             location.href = '/admin'
-                        } else if (response.data.role.role === "manager") {
+                        } else if (response.data.role === "manager") {
                             location.href = '/manager'
-                        } else if (response.data.role.role === 'kasir') {
+                        } else if (response.data.role === 'kasir') {
                             location.href = '/kasir'
                         }
                     }
