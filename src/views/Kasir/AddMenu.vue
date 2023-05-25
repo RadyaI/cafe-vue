@@ -185,6 +185,7 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Add to cart</button>
+                                <button type="button" @click="addcart" class="btn btn-info">tes Add to cart</button>
                             </div>
                         </form>
                     </div>
@@ -203,7 +204,7 @@ import swal from 'sweetalert'
 export default {
     data() {
         return {
-            
+
             menu: {},
             datamenu: {},
             detailmenu: {
@@ -231,7 +232,20 @@ export default {
         }
     },
     methods: {
-      
+        addcart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            let newItem = {
+                nama: this.detailmenu.nama,
+                jumlah: this.jumlah
+            };
+
+            cart.push(newItem);
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            console.log('Item berhasil ditambahkan ke keranjang');
+        },
         getmenu() {
             axios.get('http://localhost:8000/api/getmenu')
                 .then(
@@ -268,9 +282,9 @@ export default {
                             title: 'success',
                             button: true
                         })
-                       setTimeout(() => {
-                         location.href = '/transaksi'
-                       }, 1100);
+                        setTimeout(() => {
+                            location.href = '/transaksi'
+                        }, 1100);
                     }
                 )
         }

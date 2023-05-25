@@ -193,11 +193,13 @@ export default {
     data() {
         return {
             data_history: {},
-            detail: {}
+            detail: {},
+            cart: {}
         }
     },
     mounted() {
         this.gethistory()
+        this.cart = localStorage.getItem('cart')
     },
     methods: {
         gethistory() {

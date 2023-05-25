@@ -302,7 +302,9 @@ export default {
         return {
             menu: {},
             datamenu: {},
-            detailmenu: {},
+            detailmenu: {
+                
+            },
             foto: '',
             image: '',
             carimenu: ''

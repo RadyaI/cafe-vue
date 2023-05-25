@@ -159,7 +159,7 @@ const router = new VueRouter({
 
 export default router
 
-router.beforeEach((to, form, next) => {
+router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
   if (requiresAuth) {
     const userRole = localStorage.getItem("role")

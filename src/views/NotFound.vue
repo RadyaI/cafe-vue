@@ -8,16 +8,34 @@
                     <img src="https://assets.codepen.io/5647096/Delorean.png" alt="El Delorean, El Doc y Marti McFly" />
                 </div>
                 <div class="text">
-                    <h1>404</h1>
+                    <!-- <h1>404</h1> -->
                     <h2>PAGE NOT FOUND</h2>
                     <h3>BACK TO HOME?</h3>
-                    <a href="#" class="yes">YES</a>
-                    <a href="https://www.youtube.com/watch?v=G3AfIvJBcGo">NO</a>
+                    <a href="#" class="yes" @click="balik">YES</a>
+                    <a href="https://youtu.be/dQw4w9WgXcQ" target="_blank">NO</a>
                 </div>
             </section>
         </body>
     </div>
 </template>
+
+<script>
+export default {
+    methods: {
+        balik() {
+            if (localStorage.getItem('role') === 'admin') {
+                location.href = '/admin'
+            } else if (localStorage.getItem('role')  === 'kasir' ) {
+                location.href = '/kasir'
+            } else if (localStorage.getItem('role') === 'manager') {
+                location.href = '/manager'
+            } else {
+                location.href = '/'
+            }
+        }
+    }
+}
+</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');

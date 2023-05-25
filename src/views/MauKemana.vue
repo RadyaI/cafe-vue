@@ -13,7 +13,7 @@ export default {
         balik() {
             if (localStorage.getItem('role') === 'admin') {
                 location.href = '/admin'
-            } else if (localStorage.getItem('role' === 'kasir')) {
+            } else if (localStorage.getItem('role')  === 'kasir' ) {
                 location.href = '/kasir'
             } else if (localStorage.getItem('role') === 'manager') {
                 location.href = '/manager'

@@ -238,7 +238,7 @@ export default {
 
 
                     new Chart(document.getElementById('piechart'), {
-                        type: 'pie',
+                        type: 'bar',
                         labels: 'Data Menu',
                         data: chartData,
                         options: {

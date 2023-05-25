@@ -61,27 +61,45 @@
                                 class="bi bi-cart-plus-fill"></i></button></a>
 
                     <table class="table table-hover table-striped">
+                            <thead>
+                                <tr class="bg-dark text-light">
+                                    <th>No</th>
+                                    <th>Menu</th>
+                                    <th>Jumlah</th>
+                                    <th>Total Harga</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(menu, nomor) in cart" :key="nomor">
+                                    <td>{{ nomor + 1 }}</td>
+                                    <td>{{ menu.nama }}</td>
+                                    <td>{{ menu.total_pesanan }}</td>
+                                    <td>{{ menu.total_harga }}</td>
+                                    <td><button class="btn btn-outline-danger" @click="hapus(menu)">Hapus</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#checkout">Check
+                            Out</button>
+
+
+
+                    <!-- <table class="table" id="cartTable">
                         <thead>
                             <tr class="bg-dark text-light">
-                                <th>No</th>
-                                <th>Menu</th>
+                                <th>Nama</th>
                                 <th>Jumlah</th>
-                                <th>Total Harga</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(menu, nomor) in cart" :key="nomor">
-                                <td>{{ nomor + 1 }}</td>
-                                <td>{{ menu.nama }}</td>
-                                <td>{{ menu.total_pesanan }}</td>
-                                <td>{{ menu.total_harga }}</td>
-                                <td><button class="btn btn-outline-danger" @click="hapus(menu)">Hapus</button></td>
-                            </tr>
+
                         </tbody>
-                    </table>
-                    <button class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#checkout">Check
-                        Out</button>
+                    </table> -->
+
+
+
+
                     <!-- <div class="row g-4">
 
                         <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -229,8 +247,31 @@ export default {
         this.getcart()
         this.getkasir()
         this.getmeja()
+        this.displaycart()
     },
     methods: {
+        displaycart() {
+            function displayCart() {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let tableBody = document.getElementById('cartTable').getElementsByTagName('tbody')[0];
+
+                // Menghapus isi tabel sebelumnya
+                tableBody.innerHTML = '';
+
+                // Mengisi tabel dengan item-item dalam keranjang
+                for (let i = 0; i < cart.length; i++) {
+                    let row = tableBody.insertRow();
+                    let namaCell = row.insertCell(0);
+                    let jumlahCell = row.insertCell(1);
+
+                    namaCell.innerHTML = cart[i].nama;
+                    jumlahCell.innerHTML = cart[i].jumlah;
+                }
+            }
+
+            // Memanggil fungsi displayCart untuk menampilkan isi keranjang saat halaman dimuat
+            displayCart();
+        },
         getkasir() {
             axios.get('http://localhost:8000/api/getkasir')
                 .then(
